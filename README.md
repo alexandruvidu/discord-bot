@@ -1,4 +1,4 @@
-# discord-bot - *in development*
+# discord-bot
 
 ## Dependencies
 pycord, ffmpeg

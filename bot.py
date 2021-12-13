@@ -1,11 +1,27 @@
 #!./.venv/bin/python
 
+#   Copyright 2021 Alexandru Vidu
+
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
 import discord
 import code
 import os
 import inspect
 import random
-
+import argparse
 
 from discord.ext import commands
 from discord.player import AudioSource
@@ -81,8 +97,7 @@ async def on_voice_state_update(member, before, after):
     if len(voice_status.channel.members) == 1:
         voice_status.stop()
         await voice_status.disconnect()
-        
-
+   
 
 
 
@@ -133,9 +148,7 @@ async def scram(ctx):
 
 
 
-# roll_error - error handler for the <roll> command
-#   @ctx     : command that crashed invocation context
-#   @error   : ...
+
 @roll.error
 async def roll_error(ctx, error):
     await ctx.send(str(error))
@@ -157,8 +170,17 @@ async def scram_error(ctx, error):
 ################################################################################
 
 if __name__ == '__main__':
-    if 'BOT_TOKEN' not in os.environ:
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t', '--token', nargs='?')
+    args = parser.parse_args()
+
+    if args.token is not None:
+        token = args.token
+    elif 'BOT_TOKEN' in os.environ:
+        token = os.environ['BOT_TOKEN']
+    else:
         log_msg('save your token in the BOT_TOKEN env variable!', 'error')
         exit(-1)
 
-    bot.run(os.environ['BOT_TOKEN'])
+    bot.run(token)
